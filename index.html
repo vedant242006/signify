@@ -1,0 +1,3303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Communication & Learning Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 4rem;
+            color: white;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 3rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .translator-card {
+            border: 4px solid #c084fc;
+        }
+
+        .learning-card {
+            border: 4px solid #60a5fa;
+        }
+
+        .module-icon {
+            width: 5rem;
+            height: 5rem;
+            margin: 0 auto 1.5rem;
+            color: #7c3aed;
+        }
+
+        .learning-card .module-icon {
+            color: #2563eb;
+        }
+
+        .module-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .module-description {
+            font-size: 1.1rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+        }
+
+        .tag {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .tag-purple {
+            background: #f3e8ff;
+            color: #7c3aed;
+        }
+
+        .tag-blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .tag-green {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: white;
+        }
+
+        .home-btn {
+            background: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .home-btn:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .home-btn svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #7c3aed;
+        }
+
+        .translator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+
+        .translator-section {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+            color: #7c3aed;
+        }
+
+        .control-btn {
+            padding: 1rem;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .control-btn svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .mic-btn {
+            background: #7c3aed;
+        }
+
+        .mic-btn.listening {
+            background: #dc2626;
+        }
+
+        .mic-btn svg {
+            color: white;
+        }
+
+        .camera-btn {
+            background: #2563eb;
+        }
+
+        .camera-btn.active {
+            background: #dc2626;
+        }
+
+        .camera-btn svg {
+            color: white;
+        }
+
+        .language-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.75rem;
+        }
+
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .lang-btn {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .lang-btn:hover {
+            border-color: #7c3aed;
+        }
+
+        .lang-btn.active {
+            border-color: #7c3aed;
+            background: #f3e8ff;
+        }
+
+        .flag {
+            font-size: 1.5rem;
+        }
+
+        .lang-name {
+            font-weight: 600;
+        }
+
+        .text-outputs {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .text-box {
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 6rem;
+        }
+
+        .original-text {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+        }
+
+        .translated-text {
+            background: #f3e8ff;
+            border: 2px solid #c084fc;
+        }
+
+        .text-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .translated-text .text-label {
+            color: #7c3aed;
+        }
+
+        .label-icon {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .text-content {
+            font-size: 1.125rem;
+            color: #1f2937;
+        }
+
+        .camera-container {
+            position: relative;
+            background: #111827;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            height: 320px;
+            margin-bottom: 1rem;
+        }
+
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-off {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #1f2937;
+            color: #9ca3af;
+        }
+
+        .camera-off.hidden {
+            display: none;
+        }
+
+        .camera-off svg {
+            width: 4rem;
+            height: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .gesture-result {
+            background: #d1fae5;
+            border: 2px solid #10b981;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .gesture-result.hidden {
+            display: none;
+        }
+
+        .gesture-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #059669;
+            margin-bottom: 0.5rem;
+        }
+
+        .gesture-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #047857;
+            margin-bottom: 1rem;
+        }
+
+        .gesture-audio {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #059669;
+        }
+
+        .gesture-audio svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .gesture-scanning {
+            background: #dbeafe;
+            border: 2px solid #60a5fa;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+            color: #2563eb;
+        }
+
+        .gesture-scanning.hidden {
+            display: none;
+        }
+
+        .learning-tabs {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            background: transparent;
+            border-bottom: 4px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            color: #6b7280;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            background: #f9fafb;
+        }
+
+        .tab-btn.active {
+            background: #dbeafe;
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        .tab-btn svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .learning-section {
+            display: none;
+        }
+
+        .learning-section.active {
+            display: block;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .demo-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .demo-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .demo-thumbnail {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 12rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+        }
+
+        .demo-content {
+            padding: 1.5rem;
+        }
+
+        .demo-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-duration {
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .demo-btn {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .demo-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .demo-btn svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .lectures-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .lecture-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .lecture-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .lecture-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: #dbeafe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .lecture-icon.completed {
+            background: #d1fae5;
+        }
+
+        .lecture-icon svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #2563eb;
+        }
+
+        .lecture-icon.completed svg {
+            color: #059669;
+        }
+
+        .lecture-info {
+            flex: 1;
+        }
+
+        .lecture-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .lecture-lessons {
+            color: #6b7280;
+        }
+
+        .lecture-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .completed-badge {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .lecture-btn {
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lecture-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-progress {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .quiz-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #7c3aed;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .quiz-score svg {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+
+        .quiz-progress-bar {
+            width: 100%;
+            height: 0.75rem;
+            background: #e5e7eb;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #7c3aed;
+            border-radius: 1rem;
+            transition: width 0.3s ease;
+        }
+
+        .quiz-question {
+            background: #dbeafe;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .quiz-question p {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            border-color: #7c3aed;
+            background: #f3e8ff;
+        }
+
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .practice-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .practice-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .practice-icon {
+            width: 3rem;
+            height: 3rem;
+            margin: 0 auto 1rem;
+        }
+
+        .beginner .practice-icon {
+            color: #059669;
+        }
+
+        .intermediate .practice-icon {
+            color: #d97706;
+        }
+
+        .advanced .practice-icon {
+            color: #dc2626;
+        }
+
+        .practice-level {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .practice-questions {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .practice-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .practice-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2rem;
+            }
+
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .translator-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .languages-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-grid,
+            .practice-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="homePage" class="page active">
+        <div class="container">
+            <div class="header-section">
+                <h1 class="main-title">Sign Language Platform</h1>
+                <p class="subtitle">Empowering Communication for Everyone</p>
+            </div>
+            
+            <div class="modules-grid">
+                <button class="module-card translator-card" onclick="showModule('translator')">
+                    <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <h2 class="module-title">Live Translator</h2>
+                    <p class="module-description">Real-time speech to text captioning and gesture recognition</p>
+                    <div class="tags">
+                        <span class="tag tag-purple">Voice to Text</span>
+                        <span class="tag tag-blue">Multi-Language</span>
+                        <span class="tag tag-green">Gesture Recognition</span>
+                    </div>
+                </button>
+
+                <button class="module-card learning-card" onclick="showModule('learning')">
+                    <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    <h2 class="module-title">Learn Sign Language</h2>
+                    <p class="module-description">Complete learning platform with demos, lectures, quizzes and practice</p>
+                    <div class="tags">
+                        <span class="tag tag-blue">Video Demos</span>
+                        <span class="tag tag-purple">Lectures</span>
+                        <span class="tag tag-green">Quizzes</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="translatorPage" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2 class="page-title">Live Translator</h2>
+                <button class="home-btn" onclick="showModule('home')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="translator-grid">
+                <div class="translator-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                            Speech to Text
+                        </h3>
+                        <button id="micBtn" class="control-btn mic-btn" onclick="toggleListening()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="language-selector">
+                        <label class="label">Select Language</label>
+                        <div class="languages-grid">
+                            <button class="lang-btn active" onclick="selectLanguage('hindi', this)">
+                                <span class="flag">🇮🇳</span>
+                                <span class="lang-name">Hindi</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('english', this)">
+                                <span class="flag">🇬🇧</span>
+                                <span class="lang-name">English</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('spanish', this)">
+                                <span class="flag">🇪🇸</span>
+                                <span class="lang-name">Spanish</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('french', this)">
+                                <span class="flag">🇫🇷</span>
+                                <span class="lang-name">French</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('german', this)">
+                                <span class="flag">🇩🇪</span>
+                                <span class="lang-name">German</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="text-outputs">
+                        <div class="text-box original-text">
+                            <p class="text-label">Original Text:</p>
+                            <p id="captionText" class="text-content">Start speaking...</p>
+                        </div>
+
+                        <div class="text-box translated-text">
+                            <p class="text-label">
+                                <svg class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m5 8 6 6"></path>
+                                    <path d="m4 14 6-6 2-3"></path>
+                                    <path d="M2 5h12"></path>
+                                    <path d="M7 2h1"></path>
+                                    <path d="m22 22-5-10-5 10"></path>
+                                    <path d="M14 18h6"></path>
+                                </svg>
+                                Translated Text (<span id="selectedLangName">Hindi</span>):
+                            </p>
+                            <p id="translatedText" class="text-content">Translation will appear here...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="translator-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            Gesture Recognition
+                        </h3>
+                        <button id="cameraBtn" class="control-btn camera-btn" onclick="toggleCamera()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="camera-container">
+                        <video id="videoElement" class="video-feed" autoplay playsinline></video>
+                        <div id="cameraOff" class="camera-off">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                            <p>Camera is off</p>
+                        </div>
+                    </div>
+                    <div id="gestureResult" class="gesture-result hidden">
+                        <p class="gesture-label">Detected Gesture:</p>
+                        <p id="gestureText" class="gesture-text">A</p>
+                        <div class="gesture-audio">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                                <path d="M19.07 4.93a9 9 0 0 1 0 14.14"></path>
+                            </svg>
+                            <span>Playing audio...</span>
+                        </div>
+                    </div>
+                    <div id="gestureScanning" class="gesture-scanning">
+                        <p>Scanning for gestures...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="learningPage" class="page">
+        <div class="container">
+            <div class="page-header">
+                <h2 class="page-title
+">Learn Sign Language</h2>
+                <button class="home-btn" onclick="showModule('home')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="learning-tabs">
+                <button class="tab-btn active" onclick="showLearningSection('demos', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Demos
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('lectures', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                    </svg>
+                    Lectures
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('quizzes', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    Quizzes
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('practice', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    Practice
+                </button>
+            </div>
+            <div id="demosSection" class="learning-section active">
+                <div class="demo-grid">
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">
+                            🎥
+                        </div>
+                        <div class="demo-content">
+                            <h3 class="demo-title
+">Basic Greetings</h3>
+                            <p class="demo-duration">Duration: 5 mins</p>
+                            <button class="demo-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">
+                            🎥
+                        </div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Common Phrases</h3>
+                            <p class="demo-duration">Duration: 7 mins</p>
+                            <button class="demo-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">
+                            🎥
+                        </div>
+                        <div class="demo-content">
+                            <h3 class="demo-title
+">Numbers 1-10</h3>
+                            <p class="demo-duration">Duration: 4 mins</p>
+                            <button class="demo-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">
+                            🎥
+                        </div>
+                        <div class="demo-content">
+                            <h3 class="demo-title
+">Days of the Week</h3>
+                            <p class="demo-duration">Duration: 6 mins</p>
+                            <button class="demo-btn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Watch Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="lecturesSection" class="learning-section">
+                <div class="lectures-list">
+                    <div class="lecture-card">
+                        <div class="lecture-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M12 4h9"></path>
+                                <path d="M4 9h16"></path>
+                                <path d="M4 15h16"></path>
+                            </svg>
+                        </div>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Introduction to Sign Language</h3>
+                            <p class="lecture-lessons">5 Lessons</p>
+                        </div>
+                        <span class="lecture-badge">In Progress</span>
+                        <button class="lecture-btn">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <div class="lecture-icon completed">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 6L9 17l-5-5"></path>
+                            </svg>
+                        </div>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Basic Hand Shapes</h3>
+                            <p class="lecture-lessons">8 Lessons</p>
+                        </div>
+                        <span class="lecture-badge completed-badge">Completed</span>
+                        <button class="lecture-btn">Review</button>
+                    </div>
+                    <div class="lecture-card">
+                        <div class="lecture-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M12 4h9"></path>
+                                <path d="M4 9h16"></path>
+                                <path d="M4 15h16"></path>
+                            </svg>
+                        </div>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Facial Expressions in Sign Language</h3>
+                            <p class="lecture-lessons">6 Lessons</p>
+                        </div>
+                        <span class="lecture-badge">In Progress</span>
+                        <button class="lecture-btn">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <div class="lecture-icon completed">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 6L9 17l-5-5"></path>
+                            </svg>
+                        </div>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Common Phrases and Sentences</h3>
+                            <p class="lecture-lessons">10 Lessons</p>
+                        </div>
+                        <span class="lecture-badge completed-badge">Completed</span>
+                        <button class="lecture-btn">Review</button>
+                    </div>
+                </div>
+            </div>
+            <div id="quizzesSection" class="learning-section">
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <div class="quiz-progress">Question 1 of 5</div>
+                        <div class="quiz-score
+">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M12 4h9"></path>
+                                <path d="M4 9h16"></path>
+                                <path d="M4 15h16"></path>
+                            </svg>
+                            <span>Score: 0</span>
+                        </div>
+                    </div>
+                    <div class="quiz-progress-bar">
+                        <div id="progressFill" class="progress-fill" style="width: 20%;"></div>
+                    </div>
+                    <div class="quiz-question">
+                        <p>What is the sign for "Hello" in sign language?</p>
+                    </div>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this)">A. Wave hand near forehead</button>
+                        <button class="quiz-option" onclick="selectOption(this)">B. Touch chin with fingertips</button>
+                        <button class="quiz-option" onclick="selectOption(this)">C. Cross arms over chest</button>
+                        <button class="quiz-option" onclick="selectOption(this)">D. Point to the sky</button>
+                    </div>
+                </div>
+            </div>
+            <div id="practiceSection" class="learning-section">
+                <div class="practice-grid">
+                    <div class="practice-card beginner">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Beginner</h3>
+                        <p class="practice-questions">10 Questions</p>
+                        <button class="practice-btn">Start Practice</button>
+                    </div>
+                    <div class="practice-card intermediate">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Intermediate</h3>
+                        <p class="practice-questions">15 Questions</p>
+                        <button class="practice-btn">Start Practice</button>
+                    </div>
+                    <div class="practice-card advanced">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Advanced</h3>
+                        <p class="practice-questions">20 Questions</p>
+                        <button class="practice-btn">Start Practice</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentModule = 'home';
+        let isListening = false;
+        let isCameraOn = false;
+        let selectedLanguage = 'hindi';
+        let recognition;
+        let videoStream;
+
+        function showModule(module) {
+            document.getElementById('homePage').classList.remove('active');
+            document.getElementById('translatorPage').classList.remove('active');
+            document.getElementById('learningPage').classList.remove('active');
+            if (module === 'home') {
+                document.getElementById('homePage').classList.add('active');
+            } else if (module === 'translator') {
+                document.getElementById('translatorPage').classList.add('active');
+            } else if (module === 'learning') {
+                document.getElementById('learningPage').classList.add('active');
+            }   
+            currentModule = module;
+        }
+        function toggleListening() {
+            const micBtn = document.getElementById('micBtn');
+            if (!isListening) {
+                startListening();
+                micBtn.classList.add('listening');
+            } else {
+                stopListening();
+                micBtn.classList.remove('listening');
+            }
+            isListening = !isListening;
+        }   
+        function startListening() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert('Your browser does not support speech recognition. Please use Google Chrome.');
+                return;
+            }
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = getLanguageCode(selectedLanguage);
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                document.getElementById('captionText').innerText = finalTranscript + interimTranscript;
+                translateText(finalTranscript + interimTranscript);
+            };
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error', event);
+            };
+            recognition.start();
+            document.getElementById('captionText').innerText = 'Listening...';
+        }
+        function stopListening() {
+            if (recognition) {
+                recognition.stop();
+                recognition = null;
+            }
+            document.getElementById('captionText').innerText = 'Stopped listening.';
+        }
+        function getLanguageCode(lang) {
+            switch (lang) {
+                case 'hindi': return 'hi-IN';
+                case 'english': return 'en-US';
+                case 'spanish': return 'es-ES';
+                case 'french': return 'fr-FR';
+                case 'german': return 'de-DE';
+                default: return 'en-US';
+            }
+        }
+        function selectLanguage(lang, btn) {
+            selectedLanguage = lang;
+            document.getElementById('selectedLangName').innerText = btn.querySelector('.lang-name').innerText;
+            const langButtons = document.querySelectorAll('.lang-btn');
+            langButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (isListening) {
+                stopListening();
+                startListening();
+            }
+        }
+        function translateText(text) {
+            if (!text.trim()) {
+                document.getElementById('translatedText').innerText = 'Translation will appear here...';
+                return;
+            }
+            // Mock translation for demonstration purposes
+            const translations = {
+                'hindi': 'नमस्ते',
+                'english': 'Hello',
+                'spanish': 'Hola',
+                'french': 'Bonjour',
+                'german': 'Hallo'
+            };
+            document.getElementById('translatedText').innerText = translations[selectedLanguage] || text;
+        }
+        function toggleCamera() {
+            const cameraBtn = document.getElementById('cameraBtn');
+            const videoElement = document.getElementById('videoElement');
+            const cameraOff = document.getElementById('cameraOff');
+            if (!isCameraOn) {
+                startCamera();
+                cameraBtn.classList.add('active');
+                cameraOff.classList.add('hidden');
+                videoElement.classList.remove('hidden');
+            } else {
+                stopCamera();
+                cameraBtn.classList.remove('active');
+                cameraOff.classList.remove('hidden');
+                videoElement.classList.add('hidden');
+            }
+            isCameraOn = !isCameraOn;
+        }
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    videoStream = stream;
+                    const videoElement = document.getElementById('videoElement');
+                    videoElement.srcObject = stream;
+                    videoElement.classList.remove('hidden');
+                    document.getElementById('gestureScanning').classList.remove('hidden');
+                    document.getElementById('gestureResult').classList.add('hidden');
+                    // Mock gesture detection for demonstration
+                    setTimeout(() => {
+                        showDetectedGesture('A');
+                    }, 5000);
+                })
+                .catch(err => {
+                    console.error('Error accessing camera: ', err);
+                    alert('Could not access the camera. Please check permissions.');
+                });
+        }
+        function stopCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+            const videoElement = document.getElementById('videoElement');
+            videoElement.srcObject = null;
+            videoElement.classList.add('hidden');
+            document.getElementById('gestureScanning').classList.add('hidden');
+            document.getElementById('gestureResult').classList.add('hidden');
+        }
+        function showDetectedGesture(gesture) {
+            document.getElementById('gestureScanning').classList.add('hidden');
+            const gestureResult = document.getElementById('gestureResult');
+            document.getElementById('gestureText').innerText = gesture;
+            gestureResult.classList.remove('hidden');
+            playGestureAudio(gesture);
+        }
+        function playGestureAudio(gesture) {
+            const gestureAudio = document.querySelector('.gesture-audio');
+            gestureAudio.classList.add('playing');
+            // Mock audio playback
+            setTimeout(() => {
+                gestureAudio.classList.remove('playing');
+            }, 3000);
+        }
+        function showLearningSection(section, btn) {
+            const sections = document.querySelectorAll('.learning-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        function selectOption(optionBtn) {
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+            optionBtn.classList.add('selected');
+            // Mock answer checking and progress update
+            setTimeout(() => {
+                alert('Answer submitted: ' + optionBtn.innerText);
+                // Update progress bar and score here as needed
+            }, 500);
+        }
+        // Initialize the app
+        showModule('home');
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Platform</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px 0;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .page-title {
+            font-size: 2rem;
+            color: #444;
+        }
+        .home-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+        .home-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .home-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #444;
+        }
+        /* Home Page Styles */
+        .home-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .home-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #222;
+        }
+        .home-header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .module-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+            stroke: #007BFF;
+        }
+        .module-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .module-description {
+            font-size: 1rem;
+            color: #555;
+        }
+        /* Translator Page Styles */
+        .translator-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .translator-section {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            font-size: 1.5rem;
+            color: #333;
+            display: flex;
+            align-items: center;
+        }
+        .section-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            stroke: #28A745;
+        }
+        .control-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background-color 0.3s ease;
+        }
+        .control-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .control-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #444;
+        }
+        .control-btn.listening svg {
+            stroke: #DC3545;
+        }
+        .text-outputs {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .text-box {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .text-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .label-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            stroke: #007BFF;
+        }
+        .text-content {
+            font-size: 1rem;
+            color: #555;
+            min-height: 40px;
+        }
+        .language-selection {
+            margin-bottom: 20px;
+        }
+        .language-selection p {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .lang-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .lang-btn {
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .lang-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .lang-btn.active {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        .lang-icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        .lang-name {
+            font-size: 1rem;
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .video-feed {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .camera-off {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+        }
+        .camera-off svg {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+            stroke: #fff;
+        }
+        .gesture-result, .gesture-scanning {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .gesture-result.hidden, .gesture-scanning.hidden {
+            display: none;
+        }
+        .gesture-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        .gesture-text {
+            font-size: 2rem;
+            color: #007BFF;
+            margin-bottom: 10px;
+        }
+
+        .gesture-audio {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #28A745;
+            font-weight: bold;
+        }
+        .gesture-audio svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        .gesture-audio.playing span {
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .gesture-scanning p {
+            font-size: 1rem;
+            color: #666;
+        }
+        /* Learning Page Styles */
+        .learning-tabs {    
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }   
+        .tab-btn {
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .tab-btn:hover {
+            background-color: #e0e0e0;
+        }
+        .tab-btn.active {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        .tab-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        .learning-section {
+            display: none;
+        }
+        .learning-section.active {
+            display: block;
+        }
+        /* Demos Section */
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .demo-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .demo-thumbnail {
+            background-color: #e9ecef;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+        }
+        .demo-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .demo-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .demo-duration {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .demo-btn {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        .demo-btn:hover {
+            background-color: #0056b3;
+        }
+        .demo-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        /* Lectures Section */
+        .lectures-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .lecture-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .lecture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .lecture-icon {
+            width: 40px;
+            height: 40px;
+            stroke: #17A2B8;
+        }
+        .lecture-icon.completed {
+            stroke: #28A745;
+        }
+        .lecture-info {
+            flex-grow: 1;
+        }
+        .lecture-title {
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .lecture-lessons {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .lecture-badge {
+            position: absolute;
+            top: 15px;
+            right: 100px;
+            background-color: #FFC107;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .lecture-badge.completed-badge {
+            background-color: #28A745;
+        }
+        .lecture-btn {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .lecture-btn:hover {
+            background-color: #0056b3;
+        }
+        /* Quizzes Section */
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .quiz-progress {
+            font-size: 1rem;
+            color: #333;
+        }
+        .quiz-score {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1rem;
+            color: #28A745;
+            font-weight: bold;
+        }
+        .quiz-score svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+        }
+        .quiz-progress-bar {
+            background-color: #e9ecef;
+            border-radius: 5px;
+            height: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background-color: #007BFF;
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        .quiz-question {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .quiz-option {
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: background-color 0.3s ease;
+        }
+        .quiz-option:hover {
+            background-color: #e0e0e0;
+        }
+        .quiz-option.selected {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        /* Practice Section */
+        .practice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .practice-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .practice-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+        .practice-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 15px;
+            stroke: #6F42C1;
+        }
+        .practice-level {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .practice-questions {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .practice-btn {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .practice-btn:hover {
+            background-color: #0056b3;
+        }
+        .practice-card.beginner .practice-icon {
+            stroke: #28A745;
+        }
+        .practice-card.intermediate .practice-icon {
+            stroke: #FFC107;
+        }
+        .practice-card.advanced .practice-icon {
+            stroke: #DC3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Home Page -->
+        <div id="homePage" class="page active">
+            <div class="page-header">
+                <h1 class="page-title
+">Sign Language Platform</h1>
+            </div>
+            <div class="home-header">
+                <h1>Welcome to the Sign Language Platform</h1>
+                <p>Learn, Translate, and Practice Sign Language with Ease</p>
+            </div>
+            <div class="modules-grid">
+                <div class="module-card" onclick="showModule('translator')">
+                    <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    <h2 class="module-title">Translator</h2>
+                    <p class="module-description">Convert spoken language to sign language and vice versa in real-time.</p>
+                </div>
+                <div class="module-card" onclick="showModule('learning')">
+                    <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    <h2 class="module-title">Learning</h2>
+                    <p class="module-description">Access courses, quizzes, and practice sessions to master sign language.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Translator Page -->
+        <div id="translatorPage" class="page">
+            <div class="page-header">
+                <h1 class="page-title
+">Translator</h1>
+                <button class="home-btn" onclick="showModule('home')" title="Go to
+    Home">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                </button>
+            </div>
+            <div class="translator-grid">
+                <div class="translator
+-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M12 4h9"></path>
+                                <path d="M4 9h16"></path>
+                                <path d="M4 15h16"></path>
+                            </svg>
+                            Speech to Sign
+                        </h2>
+                        <button id="micBtn" class="control-btn" onclick="toggleListening()" title="Toggle Microphone">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1v11"></path>
+                                <path d="M5 8a7 7 0 0 0 14 0"></path>
+                                <path d="M19 8v3a7 7 0 0 1-14 0V8"></path>
+                                <path d="M12 19a7 7 0 0 0 7-7h3a10 10 0 0 1-20 0h3a7 7 0 0 0 7 7z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="language-selection">
+                        <p>Select Language:</p>
+                        <div class="lang-buttons">
+                            <button class="lang-btn active" onclick="selectLanguage('hindi', this)" title="Hindi">
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">Hindi</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('english', this)" title="English">
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">English</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('spanish', this)" title
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">Spanish</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('french', this)" title="French">
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">French</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('german', this)" title="German">
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">German</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-outputs">
+                        <div class="text-box">
+                            <div class="text-label
+">
+                                <svg class="label-icon
+" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M12 4h9"></path>
+                                    <path d="M4 9h16"></path>
+                                    <path d="M4 15h16"></path>
+                                </svg>
+                                Detected Speech (<span id="selectedLangName">Hindi</span>)
+                            </div>
+                            <div id="captionText" class="text-content">Press the microphone button and start speaking...</div>
+                        </div>
+                        <div class="text-box">
+                            <div class="text-label
+">
+                                <svg class="label-icon
+" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M12 4h9"></path>
+                                    <path d="M4 9h16"></path>
+                                    <path d="M4 15h16"></path>
+
+                                </svg>
+                                Translated Sign Language
+                            </div>
+                            <div id="translatedText" class="text-content">Translation will appear here...</div>
+                        </div>
+                    </div>
+                </div>  
+                <div class="translator
+-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M12 4h9"></path>
+                                <path d="M4 9h16"></path>
+                                <path d="M4 15h16"></path>
+                            </svg>
+                            Sign to Speech
+                        </h2>
+                        <button id="cameraBtn" class="control-btn" onclick="toggleCamera()" title="Toggle Camera">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 3h10l2-3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="camera-container">
+                        <video id="videoElement" class="video-feed hidden" autoplay muted></video>
+                        <div id="cameraOff" class="camera-off">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                                <path d="M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 3h10l2-3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <p>Camera is Off</p>
+                        </div>
+                    </div>
+                    <div id="gestureResult" class="gesture-result hidden">
+                        <div class="gesture-label">Detected Gesture:</div>
+                        <div id="gestureText" class="gesture-text">A</div>
+                        <div class="gesture-audio">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9v6a4 4 0 0 0 8 0V9a4 4 0 0 0-8 0z"></path>
+                                <line x1="13" y1="9" x2="13" y2="15"></line>
+                                <line x1="16" y1="12" x2="16" y2="12"></line>
+                                <line x1="19" y1="9" x2="19" y2="15"></line>
+                            </svg>
+                            <span>Playing Audio</span>
+                        </div>
+                    </div>
+                    <div id="gestureScanning" class="gesture-scanning hidden">
+                        <p>Scanning for gestures...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Learning Page -->
+        <div id="learningPage" class="page">
+            <div class="page-header">
+                <h1 class="page-title
+">Learning</h1>
+                <button class="home-btn" onclick="showModule('home')" title="Go to Home">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                </button>
+            </div>
+            <div class="learning-tabs">
+                <button class="tab-btn active" onclick="showLearningSection('demos', this)" title="Demos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Demos
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('lectures', this)" title="Lectures">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Lectures
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('quizzes', this)" title="Quizzes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Quizzes
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('practice', this)" title="Practice">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Practice
+                </button>
+            </div>
+            <div id="demosSection" class="learning-section active">
+                <div class="demo-grid">
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Basic Greetings</h3>
+                            <p class="demo-duration">Duration: 5 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Basic Greetings Demo')" title="
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Common Phrases</h3>
+                            <p class="demo-duration">Duration: 7 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Common Phrases Demo')" title="Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Numbers and Counting</h3>
+                            <p class="demo-duration">Duration: 6 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Numbers and Counting Demo')" title="Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Everyday Conversations</h3>
+                            <p class="demo-duration">Duration: 8 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Everyday Conversations Demo')" title="Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="lecturesSection" class="learning-section">
+                <div class="lectures-list">
+                    <div class="lecture-card">
+                        <svg class="lecture-icon completed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6L9 17l-5-5"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Introduction to Sign Language</h3>
+                            <p class="lecture-lessons">5 Lessons</p>
+                        </div>
+                        <div class="lecture-badge completed-badge">Completed</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Introduction to Sign Language Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Basic Vocabulary</h3>
+                            <p class="lecture-lessons">8 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Basic Vocabulary Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Grammar and Sentence Structure</h3>
+                            <p class="lecture-lessons">6 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Grammar and Sentence Structure Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Advanced Signs and Expressions</h3>
+                            <p class="lecture-lessons">10 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Advanced Signs and Expressions Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                </div>
+            </div>
+            <div id="quizzesSection" class="learning-section">
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <div class="quiz-progress">Question 1 of 5</div>
+                        <div class="quiz-score">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 6L9 17l-5-5"></path>
+                            </svg>
+                            <span>Score: 0</span>
+                        </div>
+                    </div>
+                    <div class="quiz-progress-bar">
+                        <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div id="quizQuestion" class="quiz-question">What is the sign for "Hello"?</div>
+                    <div class="quiz-options">
+                        <button class="quiz-option" onclick="selectOption(this)" title="Option A">A. 👋</button>
+                        <button class="quiz-option" onclick="selectOption(this)" title="Option B">B. 🙌</button>
+                        <button class="quiz-option" onclick="selectOption(this)" title="Option C">C. 🤟</button>
+                        <button class="quiz-option" onclick="selectOption(this)" title="Option D">D. 👍</button>
+                    </div>
+                </div>
+            </div>
+            <div id="practiceSection" class="learning-section"> 
+                <div class="practice-grid">
+                    <div class="practice-card beginner">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Beginner</h3>
+                        <p class="practice-questions">10 Questions</p>
+                        <button class="practice-btn" onclick="alert('Starting Beginner Practice Session')" title="Start Practice">Start Practice</button>
+                    </div>
+                    <div class="practice-card intermediate">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Intermediate</h3>
+                        <p class="practice-questions">15 Questions</p>
+                        <button class="practice-btn" onclick="alert('Starting Intermediate Practice Session')" title="Start Practice">Start Practice</button>
+                    </div>
+                    <div class="practice-card advanced">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Advanced</h3>
+                        <p class="practice-questions">20 Questions</p>
+                        <button class="practice-btn" onclick="alert('Starting Advanced Practice Session')" title="Start Practice">Start Practice</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Page Navigation
+        function showModule(module) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            if (module === 'home') {
+                document.getElementById('homePage').classList.add('active');
+            } else if (module === 'translator') {
+                document.getElementById('translatorPage').classList.add('active');
+            } else if (module === 'learning') {
+                document.getElementById('learningPage').classList.add('active');
+                showLearningSection('demos', document.querySelector('.tab-btn'));
+            }
+        }
+
+        // Language Selection
+        let selectedLanguage = 'hindi';
+        function selectLanguage(lang, btn) {
+            selectedLanguage = lang;
+            document.getElementById('selectedLangName').innerText = btn.querySelector('.lang-name').innerText;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Speech Recognition
+        let recognizing = false;
+        let recognition;
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'hi-IN'; // Default to Hindi
+
+            recognition.onstart = function() {
+                recognizing = true;
+                document.getElementById('micBtn').classList.add('listening');
+            };
+
+            recognition.onerror = function(event) {
+                console.error(event.error);
+            };
+
+            recognition.onend = function() {
+                recognizing = false;
+                document.getElementById('micBtn').classList.remove('listening');
+            };
+
+            recognition.onresult = function(event) {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                document.getElementById('captionText').innerText = finalTranscript + interimTranscript;
+                if (finalTranscript) {
+                    translateText(finalTranscript);
+                }
+            };
+        } else {
+            alert('Speech Recognition not supported in this browser.');
+        }
+        function toggleListening() {
+            if (recognizing) {
+                recognition.stop();
+                return;
+            }
+            recognition.lang = selectedLanguage === 'hindi' ? 'hi-IN' :
+                              selectedLanguage === 'english' ? 'en-US' :
+                              selectedLanguage === 'spanish' ? 'es-ES' :
+                              selectedLanguage === 'french' ? 'fr-FR' :
+                              selectedLanguage === 'german' ? 'de-DE' : 'hi-IN';
+            recognition.start();
+        }
+        function translateText(text) {
+            // Mock translation for demonstration
+            const translations = {
+                'hindi': 'नमस्ते',
+                'english': 'Hello',
+                'spanish': 'Hola',
+                'french': 'Bonjour',
+                'german': 'Hallo'
+            };
+            document.getElementById('translatedText').innerText = translations[selectedLanguage] || 'Translation not available';
+        }
+        // Camera and Gesture Recognition
+        let cameraOn = false;
+        let video = document.getElementById('videoElement');
+        function toggleCamera() {
+            if (cameraOn) {
+                stopCamera();
+            } else {
+                startCamera();
+            }
+        }
+        function startCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+                    video.srcObject = stream;
+                    video.classList.remove('hidden');
+                    document.getElementById('cameraOff').classList.add('hidden');
+                    cameraOn = true;
+                    startGestureRecognition();
+                });
+            } else {
+                alert('Camera not supported in this browser.');
+            }
+        }
+        function stopCamera() {
+            let stream = video.srcObject;
+            let tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+            video.classList.add('hidden');
+            document.getElementById('cameraOff').classList.remove('hidden');
+            cameraOn = false;
+            stopGestureRecognition();
+        }
+        let gestureInterval;
+        function startGestureRecognition() {
+            document.getElementById('gestureScanning').classList.remove('hidden');
+            gestureInterval = setInterval(() => {
+                // Mock gesture detection
+                const gestures = ['A', 'B', 'C', 'D', 'E'];
+                const detectedGesture = gestures[Math.floor(Math.random() * gestures.length)];
+                showDetectedGesture(detectedGesture);
+            }, 5000); // Every 5 seconds
+        }
+        function stopGestureRecognition() {
+            clearInterval(gestureInterval);
+            document.getElementById('gestureScanning').classList.add('hidden');
+            document.getElementById('gestureResult').classList.add('hidden');
+        }
+        function showDetectedGesture(gesture) {
+            document.getElementById('gestureText').innerText = gesture;
+            document.getElementById('gestureResult').classList.remove('hidden');
+            document.getElementById('gestureScanning').classList.add('hidden');
+            playGestureAudio(gesture);
+        }
+        function playGestureAudio(gesture) {
+            const utterance = new SpeechSynthesisUtterance(gesture);
+            speechSynthesis.speak(utterance);
+            document.querySelector('.gesture-audio').classList.add('playing');
+            utterance.onend = () => {
+                document.querySelector('.gesture-audio').classList.remove('playing');
+            };
+        }
+        // Learning Section Navigation
+        function showLearningSection(section, btn) {
+            document.querySelectorAll('.learning-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        // Quiz Functionality
+        let currentQuestion = 0;
+        let score = 0;
+        const quizQuestions = [
+            {
+                question: 'What is the sign for "Hello"?',
+                options: ['👋', '🙌', '🤟', '👍'],
+                answer: '👋'
+            },
+            {
+                question: 'What is the sign for "Thank You"?',
+                options: ['🙏', '👏', '🤝', '💪'],
+                answer: '🙏'
+            },
+            {
+                question: 'What is the sign for "Yes"?',
+                options: ['👍', '👎', '✌️', '👌'],
+                answer: '👍'
+            },
+            {
+                question: 'What is the sign for "No"?',
+                options: ['👎', '👍', '✋', '👌'],
+                answer: '👎'
+            },
+            {
+                question: 'What is the sign for "Please"?',
+                options: ['🙏', '👏', '🤝', '💪'],
+                answer: '🙏'
+            }
+        ];
+        function loadQuizQuestion() {
+            if (currentQuestion < quizQuestions.length) {
+                const q = quizQuestions[currentQuestion];
+                document.getElementById('quizQuestion').innerText = q.question;
+                const optionsContainer = document.querySelector('.quiz-options');
+                optionsContainer.innerHTML = '';
+                q.options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.classList.add('quiz-option');
+                    btn.innerText = option;
+                    btn.onclick = () => selectOption(btn);
+                    btn.title = `Option ${option}`;
+                    optionsContainer.appendChild(btn);
+                });
+                document.querySelector('.quiz-progress').innerText = `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+                document.getElementById('progressFill').style.width = `${(currentQuestion / quizQuestions.length) * 100}%`;
+            } else {
+                alert(`Quiz Completed! Your score: ${score}/${quizQuestions.length}`);
+                currentQuestion = 0;
+                score = 0;
+                loadQuizQuestion();
+            }
+        }
+        function selectOption(btn) {
+            const selectedOption = btn.innerText;
+            const correctAnswer = quizQuestions[currentQuestion].answer;
+            if (selectedOption === correctAnswer) {
+                score++;
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('incorrect');
+            }
+            document.getElementById('progressFill').style.width = `${((currentQuestion + 1) / quizQuestions.length) * 100}%`;
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuizQuestion();
+            }, 1000);
+        }
+        loadQuizQuestion();
+    </script>
+</body>
+</html>
+="Option B">B. Hola</button>
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">Spanish</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('french', this)" title="French">
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">French</span>
+                            </button>
+                            <button class="lang-btn" onclick="selectLanguage('german', this)" title="German">
+                                <svg class="lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <line x1="12" y1="2" x2="12" y2="22"></line>
+                                </svg>
+                                <span class="lang-name">German</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="text-outputs">
+                        <div class="text-box">
+                            <div class="text-label">
+                                <svg class="label-icon
+" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M12 4h9"></path>
+                                    <path d="M4 9h16"></path>
+                                    <path d="M4 15h16"></path>
+                                </svg>
+                                Detected Speech (<span id="selectedLangName">Hindi</span>)
+                            </div>
+                            <div id="captionText" class="text-content">Press the microphone button and start speaking...</div>
+                        </div>
+                        <div class="text-box">
+                            <div class="text-label">
+                                <svg class="label-icon
+" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M12 4h9"></path>
+                                    <path d="M4 9h16"></path>
+                                    <path d="M4 15h16"></path>
+                                </svg>
+                                Translated Sign Language
+                            </div>
+                            <div id="translatedText" class="text-content">Translation will appear here...</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="translator-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"></path>
+                                <path d="M12 4h9"></path>
+                                <path d="M4 9h16"></path>
+                                <path d="M4 15h16"></path>
+                            </svg>
+                            Sign to Speech
+                        </h2>
+                        <button id="cameraBtn" class="control-btn" onclick="toggleCamera()" title="Toggle Camera">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 3h10l2-3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="camera-container">
+                        <video id="videoElement" class="video-feed hidden" autoplay muted></video>
+                        <div id="cameraOff" class="camera-off">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                                <path d="M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4l2 3h10l2-3h4a2 2 0 0 1 2 2z"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                            </svg>
+                            <p>Camera is Off</p>
+                        </div>
+                    </div>
+                    <div id="gestureResult" class="gesture-result hidden">
+                        <div class="gesture-label">Detected Gesture:</div>
+                        <div id="gestureText" class="gesture-text">A</div>
+                        <div class="gesture-audio">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9v6a4 4 0 0 0 8 0V9a4 4 0 0 0-8 0z"></path>
+                                <line x1="13" y1="9" x2="13" y2="15"></line>
+                                <line x1="16" y1="12" x2="16" y2="12"></line>
+                                <line x1="19" y1="9" x2="19" y2="15"></line>
+                            </svg>
+                            <span>Playing Audio</span>
+                        </div>
+                    </div>
+                    <div id="gestureScanning" class="gesture-scanning hidden">
+                        <p>Scanning for gestures...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Learning Page -->
+        <div id="learningPage" class="page">
+            <div class="page-header">
+                <h1 class="page-title">Learning</h1>
+                <button class="home-btn" onclick="showModule('home')" title="Go toHome">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            </svg>
+                </button>
+            </div>
+            <div class="learning-tabs">
+                <button class="tab-btn active" onclick="showLearningSection('demos', this)" title="Demos">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Demos
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('lectures', this)" title="Lectures">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Lectures
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('quizzes', this)" title="Quizzes">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Quizzes
+                </button>
+                <button class="tab-btn" onclick="showLearningSection('practice', this)" title="Practice">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9"></path>
+                        <path d="M12 4h9"></path>
+                        <path d="M4 9h16"></path>
+                        <path d="M4 15h16"></path>
+                    </svg>
+                    Practice
+                </button>
+            </div>
+            <div id="demosSection" class="learning-section active">
+                <div class="demo-grid">
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Basic Greetings</h3>
+                            <p class="demo-duration">Duration: 5 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Basic Greetings Demo')" title="
+
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title
+">Basic Greetings</h3>
+                            <p class="demo-duration">Duration: 5 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Basic Greetings Demo')" title="
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <d
+iv class="demo-content">
+                            <h3 class="demo-title
+">Common Phrases</h3>
+                            <p class="demo-duration">Duration: 7 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Common Phrases Demo')" title="
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Numbers and Counting</h3>
+                            <p class="demo-duration">Duration: 6 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Numbers and Counting Demo')" title="Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="demo-card">
+                        <div class="demo-thumbnail">🎬</div>
+                        <div class="demo-content">
+                            <h3 class="demo-title">Family and Relationships</h3>
+                            <p class="demo-duration">Duration: 8 mins</p>
+                            <button class="demo-btn" onclick="alert('Playing Family and Relationships Demo')" title="Play Demo">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                                Play Demo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="lecturesSection" class="learning-section">
+                <div class="lecture-grid">
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Introduction to Sign Language</h3>
+                            <p class="lecture-lessons">5 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Introduction to Sign Language Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Basic Vocabulary</h3>
+                            <p class="lecture-lessons">7 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Basic Vocabulary Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Grammar and Sentence Structure</h3>
+                            <p class="lecture-lessons">6 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Grammar and Sentence Structure Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                    <div class="lecture-card">
+                        <svg class="lecture-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <div class="lecture-info">
+                            <h3 class="lecture-title">Everyday Conversations</h3>
+                            <p class="lecture-lessons">8 Lessons</p>
+                        </div>
+                        <div class="lecture-badge">In Progress</div>
+                        <button class="lecture-btn" onclick="alert('Continuing Everyday Conversations Lecture')" title="Continue Lecture">Continue</button>
+                    </div>
+                </div>
+            </div>
+            <div id="quizzesSection" class="learning-section">
+                <div class="quiz-container">
+                    <div class="quiz-header">
+                        <h2 class="quiz-title">Sign Language Quiz</h2>
+                        <div class="quiz-progress">Question 1 of 5</div>
+                        <div class="quiz-timer">Time Left: 30s</div>
+                    </div>
+                    <div class="quiz-question">
+                        <div id="quizQuestion" class="question-text">What is the sign for "Hello"?</div>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="selectOption(this)" title="Option A">A. 👋</button>
+                            <button class="quiz-option" onclick="selectOption(this)" title="Option B">B. 🙌</button >
+                            <button class="quiz-option" onclick="selectOption(this)" title="Option C">C. 🤟</button>
+                            <button class="quiz-option" onclick="selectOption(this)" title="Option D">D. 👍</button>
+                            </div>
+                    </div>
+                    <div class="quiz-footer">
+                        <div class="quiz-progress-bar">
+                            <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                        <button class="quiz-btn" onclick="alert('Submitting Quiz')" title="Submit Quiz">Submit Quiz</button>
+                    </div>
+                </div>
+            </div>
+            <div id="practiceSection" class="learning-section">
+                <div class="practice-grid">
+                    <div class="practice-card beginner">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Beginner</h3>
+                        <p class="practice-questions">10 Questions</p>
+                        <button class="practice-btn" onclick="alert('Starting Beginner Practice Session')" title="Start Practice">Start Practice</button>
+                    </div>
+                    <div class="practice-card intermediate">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Intermediate</h3>
+                        <p class="practice-questions">15 Questions</p>
+                        <button class="practice-btn" onclick="alert('Starting Intermediate Practice Session')" title="Start Practice">Start Practice</button>
+                    </div>
+                    <div class="practice-card advanced">
+                        <svg class="practice-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20h9"></path>
+                            <path d="M12 4h9"></path>
+                            <path d="M4 9h16"></path>
+                            <path d="M4 15h16"></path>
+                        </svg>
+                        <h3 class="practice-level">Advanced</h3>
+                        <p class="practice-questions">20 Questions</p>
+                        <button class="practice-btn" onclick="alert('Starting Advanced Practice Session')" title="Start Practice">Start Practice</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Module Navigation
+        function showModule(module) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            if (module === 'home') {
+                document.getElementById('homePage').classList.add('active');
+            } else if (module === 'learning') {
+                document.getElementById('learningPage').classList.add('active');
+                // Reset to Demos tab when entering Learning module
+                document.getElementById('demosSection').classList.add('active');
+                document.getElementById('lecturesSection').classList.remove('active');
+                document.getElementById('quizzesSection').classList.remove('active');
+                document.getElementById('practiceSection').classList.remove('active');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('.tab-btn').classList.add('active');
+            }
+            // Reset buttons active state
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            if (module === 'home') {
+                document.querySelector('.nav-btn[onclick="showModule(\'home\')"]').classList.add('active');
+            } else if (module === 'learning') {
+                document.querySelector('.nav-btn[onclick="showModule(\'learning\')"]').classList.add('active');
+            }
+            // Reset language selection
+            if (module === 'home') {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('.lang-btn[onclick="selectLanguage(\'hindi\', this)"]').classList.add('active');
+                selectedLanguage = 'hindi';
+                document.getElementById('selectedLangName').innerText = 'Hindi';
+                document.getElementById('captionText').innerText = 'Press the microphone button and start speaking...';
+                document.getElementById('translatedText').innerText = 'Translation will appear here...';
+                // Stop camera and gesture recognition if active
+                if (cameraOn) {
+                    stopCamera();
+                }
+                // Reset quiz state
+                currentQuestion = 0;
+                score = 0;
+                loadQuizQuestion();
+                // Reset learning sections
+                showLearningSection('demos', document.querySelector('.tab-btn'));
+            }
+        // Speech Recognition and Translation
+        let selectedLanguage = 'hindi';
+        function selectLanguage(lang, btn) {
+            selectedLanguage = lang;
+            document.getElementById('selectedLangName').innerText = lang.charAt(0).toUpperCase() + lang.slice(1);
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('captionText').innerText = 'Press the microphone button and start speaking...';
+            document.getElementById('translatedText').innerText = 'Translation will appear here...';
+        }
+        let recognizing = false;
+        let recognition;
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'hi-IN'; // Default to Hindi
+            recognition.onstart = function() {
+                recognizing = true;
+                document.getElementById('micBtn').classList.add('listening');
+                document.getElementById('captionText').innerText = 'Listening...';
+            };
+            recognition.onerror = function(event) {
+                recognizing = false;
+                document.getElementById('micBtn').classList.remove('listening');
+                document.getElementById('captionText').innerText = 'Error occurred in recognition: ' + event.error;
+            };
+            recognition.onend = function() {
+                recognizing = false;
+                document.getElementById('micBtn').classList.remove('listening');
+                if (document.getElementById('captionText').innerText === 'Listening...') {
+                    document.getElementById('captionText').innerText = 'Press the microphone button and start speaking...';
+                }
+            };
+            recognition.onresult = function(event) {
+                let transcript = event.results[0][0].transcript;
+                document.getElementById('captionText').innerText = transcript;
+            }
+        } else {
+            alert('Speech Recognition not supported in this browser.');
+        }
+        function toggleMic() {
+            if (recognizing) {
+                recognition.stop();
+                return;
+            }
+            recognition.lang = getLanguageCode(selectedLanguage);
+            recognition.start();
+        }
+        function getLanguageCode(lang) {
+            switch (lang) {
+                case 'hindi': return 'hi-IN';
+                case 'spanish': return 'es-ES';
+                case 'french': return 'fr-FR';
+                case 'german': return 'de-DE';
+                default: return 'hi-IN';
+            }
+        }
+        // Dummy translation function (replace with actual API call)
+        function translateText(text, targetLang) {
+            const translations = {
+                'hindi': {
+                    'hello': 'नमस्ते',
+                    'thank you': 'धन्यवाद',
+                    'yes': 'हाँ',
+                    'no': 'नहीं',
+                    'please': 'कृपया'
+                },
+                'spanish': {
+                    'hello': 'Hola',
+                    'thank you': 'Gracias',
+                    'yes': 'Sí',
+                    'no': 'No',
+                    'please': 'Por favor',
+                },
+                'french': {
+                    'hello': 'Bonjour',
+                    'thank you': 'Merci',
+                    'yes': 'Oui',
+                    'no': 'Non',
+                    'please': 'S\'il vous plaît'
+                },
+                'german': {
+                    'hello': 'Hallo',
+                    'thank you': 'Danke',
+                    'yes': 'Ja',
+                    'no': 'Nein',
+                    'please': 'Bitte'
+                },
+            };
+            text = text.toLowerCase();
+            return translations[targetLang][text] || 'Translation not found';
+        }
+        document.getElementById('micBtn').onclick = () => {
+            toggleMic();
+            setTimeout(() => {
+                if (!recognizing) {
+                    const detectedText = document.getElementById('captionText').innerText;
+                    const translated = translateText(detectedText, selectedLanguage);
+                    document.getElementById('translatedText').innerText = translated;
+                }
+            }, 5000); // Simulate translation delay
+        };
+        // Camera and Gesture Recognition
+        let cameraOn = false;
+        let videoStream;
+        function toggleCamera() {
+            if (cameraOn) {
+                stopCamera();
+            } else {
+                startCamera();
+            }
+        }     function startCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    videoStream = stream;
+                    document.getElementById('videoElement').srcObject = stream;
+                    document.getElementById('videoElement').classList.remove('hidden');
+                    document.getElementById('cameraOff').classList.add('hidden');
+                    cameraOn = true;
+                    document.getElementById('gestureScanning').classList.remove('hidden');
+                    // Simulate gesture recognition
+                    setTimeout(() => {
+                        recognizeGesture();
+                    }, 5000); // Simulate 5 seconds of scanning
+                })
+                .catch(err => {
+                    alert('Error accessing camera: ' + err);
+                });
+        }
+
+        function stopCamera() {
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+            document.getElementById('videoElement').classList.add('hidden');
+            document.getElementById('cameraOff').classList.remove('hidden');
+            cameraOn = false;
+            document.getElementById('gestureResult').classList.add('hidden');
+            document.getElementById('gestureScanning').classList.add('hidden');
+        }
+        function recognizeGesture() {
+            if (!cameraOn) return;
+            document.getElementById('gestureScanning').classList.add('hidden');
+            document.getElementById('gestureResult').classList.remove('hidden');
+            // Dummy recognized gesture
+            const gestures = ['A', 'B', 'C', 'D', 'E'];
+            const recognized = gestures[Math.floor(Math.random() * gestures.length)];
+            document.getElementById('gestureText').innerText = recognized;
+            // Play audio for the recognized gesture
+            const utterance = new SpeechSynthesisUtterance(recognized);
+            speechSynthesis.speak(utterance);
+            // Hide result after a while
+            setTimeout(() => {
+                if (cameraOn) {
+                    document.getElementById('gestureResult').classList.add('hidden');
+                    document.getElementById('gestureScanning').classList.remove('hidden');
+                    // Continue recognizing gestures
+                    setTimeout(() => {
+                        recognizeGesture();
+                    }, 5000);
+                }
+            }, 5000);
+        }
+
+        // Learning Module Navigation
+        function showLearningSection(section, btn) {
+            document.querySelectorAll('.learning-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Quiz Functionality
+        let currentQuestion = 0;
+        let score = 0;
+        const quizQuestions = [
+            {
+                question: 'What is the sign for "Hello"?',
+                options: ['👋', '🙌', '🤟', '👍'],
+                answer: '👋'
+            },
+            {
+                question: 'What is the sign for "Thank You"?',
+                options: ['🙏', '👏', '🤝', '💐'],
+                answer: '🙏'
+            },
+            {
+                question: 'What is the sign for "Yes"?',
+                options: ['👍', '👎', '👌', '✌️'],
+                answer: '👍'
+            },
+            {
+                question: 'What is the sign for "No"?',
+                options: ['👎', '👍', '👌', '✌️'],
+                answer: '👎'
+            },
+            {
+                question: 'What is the sign for "Please"?',
+                options: ['🙏', '💐', '🤝', '👏'],
+                answer: '🙏'
+            }
+        ];
+        function loadQuizQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                alert('Quiz completed! Your score: ' + score + '/' + quizQuestions.length);
+                currentQuestion = 0;
+                score = 0;
+            }
+            const q = quizQuestions[currentQuestion];
+            document.getElementById('quizQuestion').innerText = q.question;
+            const optionsContainer = document.querySelector('.quiz-options');
+            optionsContainer.innerHTML = '';
+            q.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerText = option;
+                btn.onclick = () => selectOption(btn);
+                btn.title = 'Option ' + option;
+                optionsContainer.appendChild(btn);
+            });
+            document.querySelector('.quiz-progress').innerText = 'Question ' + (currentQuestion + 1) + ' of ' + quizQuestions.length;
+            document.getElementById('progressFill').style.width = ((currentQuestion) / quizQuestions.length * 100) + '%';
+        }
+        function selectOption(btn) {
+            const selected = btn.innerText;
+            const correct = quizQuestions[currentQuestion].answer;
+            if (selected === correct) {
+                score++;
+                btn.style.backgroundColor = '#4CAF50'; // Green for correct
+            } else {
+                btn.style.backgroundColor = '#f44336'; // Red for incorrect
+            }
+            document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+            setTimeout(() => {
+                currentQuestion++;
+                loadQuizQuestion();
+            }, 2000);
+        }
+        document.querySelector('.quiz-btn').onclick = () => {
+            alert('Submitting Quiz! Your score: ' + score + '/' + quizQuestions.length);
+            currentQuestion = 0;
+            score = 0;
+            loadQuizQuestion();
+        };
+        // Initialize
+        loadQuizQuestion();
+        showModule('home');
+    </script>
+</body>
+</html>
